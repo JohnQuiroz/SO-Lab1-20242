@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="pointer_examples">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ejemplos/conceptos_c/punteros/pointer_examples.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

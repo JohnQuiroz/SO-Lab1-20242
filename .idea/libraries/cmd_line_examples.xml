@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="cmd_line_examples">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ejemplos/conceptos_c/cmd_line_args/cmd_line_examples.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

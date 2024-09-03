@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="structs_examples">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ejemplos/conceptos_c/estructuras/structs_examples.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

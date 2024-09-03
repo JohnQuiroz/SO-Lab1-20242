@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="make_examples">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ejemplos/conceptos_c/multi-file_project/make_examples.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

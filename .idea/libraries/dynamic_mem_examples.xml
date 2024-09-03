@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dynamic_mem_examples">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ejemplos/conceptos_c/reserva_dinamica_memoria/dynamic_mem_examples.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
