@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 FILE *openFile(char *, char *);
+int isHardlinked(const char *, const char *);
 
 int main(int argc, char *argv[])
 {
@@ -22,7 +24,7 @@ int main(int argc, char *argv[])
         case 3:
             input = openFile(argv[1] , "r");
             output = openFile(argv[2], "w");
-            if(strcmp(file1, file2) == 0){
+            if((strcmp(file1, file2) == 0) || isHardlinked(file1, file2)){
                 fprintf(stderr, "reverse: input and output file must differ\n");
                 exit(1);
             }
@@ -44,4 +46,13 @@ FILE *openFile(char *filename, char *mode) {
         exit(1);
     }
     return file;
+}
+
+int isHardlinked(const char *filename1, const char *filename2) {
+    struct stat fileInfo1, fileInfo2;
+    if (stat(filename1, &fileInfo1) == -1 || stat(filename2, &fileInfo2) == -1) {
+        fprintf(stderr, "reverse: cannot open file '/no/such/file.txt'\n");
+        exit(1);
+    }
+    return fileInfo1.st_ino == fileInfo2.st_ino;
 }
