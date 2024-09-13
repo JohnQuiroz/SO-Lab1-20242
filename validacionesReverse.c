@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <ctype.h>  // Para verificar caracteres imprimibles
 
 FILE *openFile(char *, char *);
 int isHardlinked(const char *, const char *);
 void reverseContent(FILE *input, FILE *output);
+void checkNonPrintableCharacters(const char *line);
 
 int main(int argc, char *argv[])
 {
@@ -71,6 +73,17 @@ int isHardlinked(const char *filename1, const char *filename2) {
     return fileInfo1.st_ino == fileInfo2.st_ino;
 }
 
+// Función para verificar si hay caracteres no imprimibles en una línea
+void checkNonPrintableCharacters(const char *line) {
+    for (int i = 0; i < strlen(line); i++) {
+        // Verificar si el carácter no es imprimible
+        if (!isprint(line[i]) && line[i] != '\n' && line[i] != '\t') {
+            fprintf(stderr, "reverse: found non-printable character in line\n");
+            exit(1);
+        }
+    }
+}
+
 // Función para invertir el contenido del archivo de entrada y escribirlo en el archivo de salida
 void reverseContent(FILE *input, FILE *output) {
     char **lines = NULL;
@@ -79,14 +92,43 @@ void reverseContent(FILE *input, FILE *output) {
     
     // Leer el archivo línea por línea y almacenar en un array de cadenas
     while (fgets(buffer, sizeof(buffer), input)) {
+        // Verificar si la línea leída contiene caracteres no imprimibles
+        checkNonPrintableCharacters(buffer);
+
         // Alocar memoria para almacenar la línea actual
         lines = realloc(lines, (count + 1) * sizeof(char *));
+        if (lines == NULL) {
+            fprintf(stderr, "reverse: failed to allocate memory\n");
+            exit(1);
+        }
+        
         lines[count] = strdup(buffer);
+        if (lines[count] == NULL) {
+            fprintf(stderr, "reverse: failed to allocate memory for line\n");
+            exit(1);
+        }
+
         count++;
     }
 
+    // Verificar si las líneas fueron almacenadas correctamente
+    if (count == 0) {
+        fprintf(stderr, "reverse: no lines to reverse\n");
+        return;
+    }
+
+    // DEBUG: Mostrar las líneas que se almacenaron antes de invertirlas
+    printf("Lines read from input file:\n");
+    for (size_t i = 0; i < count; i++) {
+        printf("%s", lines[i]);
+    }
+
     // Escribir las líneas en orden inverso en el archivo de salida
+    printf("\nWriting lines in reverse order:\n");
     for (ssize_t i = count - 1; i >= 0; i--) {
+        // DEBUG: Mostrar las líneas que se están escribiendo en orden inverso
+        printf("%s", lines[i]);
+        
         fputs(lines[i], output);
         free(lines[i]);  // Liberar la memoria de cada línea después de escribirla
     }
