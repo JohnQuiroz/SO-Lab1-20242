@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
         break;
         case 2:
             input = openFile(argv[1], "r");
+            reverse(input, NULL);
             fclose(input);
             exit(0);
         break;
@@ -69,7 +70,6 @@ void reverse(FILE *input, FILE *output){
     size_t line_count = 0;
     ssize_t read;
 
-    // Read lines from input file into dynamically allocated memory
     while ((read = getline(&buffer, &read, input)) != -1) {
         lines = realloc(lines, (line_count + 1) * sizeof(char *));
         lines[line_count] = malloc(read);
@@ -77,7 +77,6 @@ void reverse(FILE *input, FILE *output){
         line_count++;
     }
 
-    // Print lines in reverse order to output file or stdout
     for (size_t i = line_count; i > 0; i--) {
         if(output != NULL){
             fprintf(output, "%s", lines[i - 1]);
@@ -88,7 +87,6 @@ void reverse(FILE *input, FILE *output){
         
     }
 
-    // Free remaining allocated memory
     free(lines);
     free(buffer);
 }
