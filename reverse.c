@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <stddef.h>
 
 FILE *openFile(char *, char *);
 int isHardlinked(const char *, const char *);
+void reverse(FILE *input, FILE *uotput);
 
 int main(int argc, char *argv[])
 {
@@ -27,6 +30,9 @@ int main(int argc, char *argv[])
             if((strcmp(file1, file2) == 0) || isHardlinked(file1, file2)){
                 fprintf(stderr, "reverse: input and output file must differ\n");
                 exit(1);
+            }
+            else{
+                reverse(input, output);
             }
             fclose(input);
             fclose(output);
@@ -55,4 +61,34 @@ int isHardlinked(const char *filename1, const char *filename2) {
         exit(1);
     }
     return fileInfo1.st_ino == fileInfo2.st_ino;
+}
+
+void reverse(FILE *input, FILE *output){
+    char **lines = NULL;
+    char *buffer = NULL;
+    size_t line_count = 0;
+    ssize_t read;
+
+    // Read lines from input file into dynamically allocated memory
+    while ((read = getline(&buffer, &read, input)) != -1) {
+        lines = realloc(lines, (line_count + 1) * sizeof(char *));
+        lines[line_count] = malloc(read);
+        strcpy(lines[line_count], buffer);
+        line_count++;
+    }
+
+    // Print lines in reverse order to output file or stdout
+    for (size_t i = line_count; i > 0; i--) {
+        if(output != NULL){
+            fprintf(output, "%s", lines[i - 1]);
+            free(lines[i - 1]);
+        } else {
+            fprintf(stdout, "%s", lines[i - 1]);
+        }
+        
+    }
+
+    // Free remaining allocated memory
+    free(lines);
+    free(buffer);
 }
